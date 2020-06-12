@@ -38,7 +38,8 @@ from pybossa import util
 
 def create_app(run_as_server=True):
     """Create web app."""
-    app = Flask(__name__, subdomain_matching=False)
+    #app = Flask(__name__, subdomain_matching=False)
+    app = Flask(__name__)
     configure_app(app)
     setup_assets(app)
     setup_cache_timeouts(app)
