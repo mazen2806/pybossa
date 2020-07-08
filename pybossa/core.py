@@ -249,7 +249,7 @@ def setup_logging(app):
     if log_file_path:  # pragma: no cover
         file_handler = RotatingFileHandler(log_file_path)
         file_handler.setFormatter(Formatter(
-            '%(name)s:%(levelname)s:[%(asctime)s] %(message)s '
+            '[%(asctime)s %(name)s %(levelname)s] %(message)s '
             '[in %(pathname)s:%(lineno)d]'
         ))
         file_handler.setLevel(log_level)
