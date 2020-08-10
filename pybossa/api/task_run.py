@@ -23,7 +23,7 @@ This package adds GET, POST, PUT and DELETE methods for:
 
 """
 import json
-import time
+import time, datetime
 from flask import request, Response, current_app
 from flask_login import current_user
 from pybossa.model.task_run import TaskRun
@@ -58,7 +58,7 @@ class TaskRunAPI(APIBase):
         guard = ContributionsGuard(sentinel.master)
 
         self._validate_project_and_task(taskrun, task)
-        self._ensure_task_was_requested(task, guard)
+        #self._ensure_task_was_requested(task, guard)
         self._add_user_info(taskrun)
         self._add_created_timestamp(taskrun, task, guard)
 
@@ -96,7 +96,12 @@ class TaskRunAPI(APIBase):
 
     def _add_created_timestamp(self, taskrun, task, guard):
         taskrun.created = guard.retrieve_timestamp(task, get_user_id_or_ip())
-        guard._remove_task_stamped(task, get_user_id_or_ip())
+        if taskrun.created:
+            guard._remove_task_stamped(task, get_user_id_or_ip())
+        else:
+            # hack to allow taskrun submit when guard expired
+            now = datetime.datetime.utcnow() - datetime.timedelta(minutes = 15)
+            taskrun.created = now.isoformat()
 
     def _file_upload(self, data):
         """Method that must be overriden by the class to allow file uploads for

@@ -54,16 +54,17 @@ def new_task(project_id, sched, user_id=None, user_ip=None,
 
 
 def can_post(project_id, task_id, user_id_or_ip):
-    scheduler = get_project_scheduler(project_id, session)
-    if scheduler == 'locked':
-        user_id = user_id_or_ip['user_id'] or \
-                user_id_or_ip['external_uid'] or \
-                user_id_or_ip['user_ip'] or \
-                '127.0.0.1'
-        allowed = has_lock(task_id, user_id, TIMEOUT)
-        return allowed
-    else:
-        return True
+    return True
+    #scheduler = get_project_scheduler(project_id, session)
+    #if scheduler == 'locked':
+    #    user_id = user_id_or_ip['user_id'] or \
+    #            user_id_or_ip['external_uid'] or \
+    #            user_id_or_ip['user_ip'] or \
+    #            '127.0.0.1'
+    #    allowed = has_lock(task_id, user_id, TIMEOUT)
+    #    return allowed
+    #else:
+    #    return True
 
 
 def after_save(task_run, conn):
