@@ -189,6 +189,10 @@ def get_locked_task(project_id, user_id=None, user_ip=None,
     if offset == 2:
         return []
 
+    # only logged in users should be able access new tasks list! otherwise the slack bot will lock the task!
+    if user_id is None:
+        return []
+
     user_count = get_active_user_count(project_id, sentinel.master)
     limit = 2*user_count
 
