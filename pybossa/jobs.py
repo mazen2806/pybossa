@@ -780,7 +780,8 @@ def check_failed():
                 body = "Please, review the background jobs of your server."
                 body += "\n This is the trace error\n\n"
                 body += "------------------------------\n\n"
-                body += job.exc_info
+                if job and hasattr(job, 'exc_info'):
+                    body += job.exc_info
                 mail_dict = dict(recipients=current_app.config.get('ADMINS'),
                                  subject=subject, body=body)
                 send_mail(mail_dict)
