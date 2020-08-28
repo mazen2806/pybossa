@@ -561,7 +561,7 @@ def webhook(url, payload=None, oid=None, rerun=False):
             response = requests.post(url, params=params,
                                      data=json.dumps(payload),
                                      headers=headers)
-            webhook.response = Document(response.text).summary()
+            webhook.response = Document(response.text).summary() if response.text else ''
             webhook.response_status_code = response.status_code
         else:
             raise requests.exceptions.ConnectionError('Not URL')
