@@ -824,6 +824,16 @@ def clean_project(project_id, skip_tasks=False):
     print("Project has been cleaned")
 
 
+def clean_failed_jobs():
+    """Remove all jobs from 'failed' queue."""
+    from pybossa.core import sentinel
+    from rq import Queue
+    redis_conn = sentinel.master
+    queue = Queue('failed', connection=redis_conn)
+    print(queue.empty())
+    print("Done")
+
+
 # ==================================================
 # Misc stuff for setting up a command line interface
 
