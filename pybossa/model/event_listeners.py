@@ -130,14 +130,17 @@ def add_task_event(mapper, conn, target):
 
     # Notify volunteers (slack)
     if current_app.config.get('SLACK_TOKEN'):
-        scheme = current_app.config.get('PREFERRED_URL_SCHEME', 'http')
-        launch_url = url_for('project.presenter', short_name=tmp['short_name'], _scheme=scheme, _external=True)
+        try:
+            scheme = current_app.config.get('PREFERRED_URL_SCHEME', 'http')
+            launch_url = url_for('project.presenter', short_name=tmp['short_name'], _scheme=scheme, _external=True)
 
-        slack_client = WebClient(token=current_app.config['SLACK_TOKEN'])
-        slack_client.chat_postMessage(
-            channel="#" + tmp['short_name'],
-            text="New task! " + launch_url
-        )
+            slack_client = WebClient(token=current_app.config['SLACK_TOKEN'])
+            slack_client.chat_postMessage(
+                channel="#" + tmp['short_name'],
+                text="New task! " + launch_url
+            )
+        except:
+            pass
 
     # Notify volunteers
     if current_app.config.get('ONESIGNAL_APP_ID'):
