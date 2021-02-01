@@ -177,12 +177,13 @@ def get_export_task_jobs(queue):
 
 def project_export(_id):
     """Export project."""
-    from pybossa.core import project_repo, json_exporter, csv_exporter
-    app = project_repo.get(_id)
-    if app is not None:
-        print("Export project id %d" % _id)
-        json_exporter.pregenerate_zip_files(app)
-        csv_exporter.pregenerate_zip_files(app)
+    return
+    #from pybossa.core import project_repo, json_exporter, csv_exporter
+    #app = project_repo.get(_id)
+    #if app is not None:
+    #    print("Export project id %d" % _id)
+    #    json_exporter.pregenerate_zip_files(app)
+    #    csv_exporter.pregenerate_zip_files(app)
 
 
 def get_project_jobs(queue):
