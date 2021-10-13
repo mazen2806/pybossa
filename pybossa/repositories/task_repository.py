@@ -126,7 +126,7 @@ class TaskRepository(Repository):
     def delete_valid_from_project(self, project):
         """Delete only tasks that were created more than two months ago."""
         sql = text('''
-                   SELECT * FROM task WHERE task.project_id=:project_id
+                   DELETE FROM task WHERE task.project_id=:project_id
                    AND TO_TIMESTAMP(created,'YYYY-MM-DDTHH:MI:SS.US')
                    < CURRENT_DATE - INTERVAL '2 months'
                    ''')
