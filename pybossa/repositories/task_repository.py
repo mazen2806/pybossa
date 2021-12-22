@@ -124,11 +124,16 @@ class TaskRepository(Repository):
         self._delete_zip_files_from_store(project)
 
     def delete_valid_from_project(self, project):
-        """Delete only tasks that were created more than two months ago."""
+        """Delete tasks, task runs and results that were created more than two months ago."""
         sql = text('''
-                   DELETE FROM task WHERE task.project_id=:project_id
+                   WITH to_delete AS (
+                   SELECT id FROM task WHERE task.project_id=46
                    AND TO_TIMESTAMP(created,'YYYY-MM-DDTHH:MI:SS.US')
-                   < CURRENT_DATE - INTERVAL '2 months'
+                   < CURRENT_DATE - INTERVAL '2 months')
+                   DELETE FROM task
+                   USING to_delete
+                   WHERE task.id = to_delete.id 
+                   AND NOT to_delete.id IS NULL;
                    ''')
         self.db.session.execute(sql, dict(project_id=project.id))
         self.db.session.commit()
