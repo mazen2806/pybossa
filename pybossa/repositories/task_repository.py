@@ -127,7 +127,7 @@ class TaskRepository(Repository):
         """Delete tasks, task runs and results that were created more than two months ago."""
         sql = text('''
                    WITH to_delete AS (
-                   SELECT id FROM task WHERE task.project_id=46
+                   SELECT id FROM task WHERE task.project_id=:project_id
                    AND TO_TIMESTAMP(created,'YYYY-MM-DDTHH:MI:SS.US')
                    < CURRENT_DATE - INTERVAL '2 months')
                    DELETE FROM task
