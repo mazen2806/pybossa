@@ -773,11 +773,12 @@ def check_failed():
         if int(sentinel.slave.get(KEY)) < FAILED_JOBS_RETRIES:
             requeue_job(job_id)
         else:
+            SERVER_NAME = current_app.config.get('SERVER_NAME')
             KEY = 'pybossa:job:failed:mailed:%s' % job_id
             if (not sentinel.slave.exists(KEY) and
                     current_app.config.get('ADMINS')):
                 subject = "JOB: %s has failed more than 3 times" % job_id
-                body = "Please, review the background jobs of your server."
+                body = "Please, review the background jobs of your %s server." % SERVER_NAME
                 body += "\n This is the trace error\n\n"
                 body += "------------------------------\n\n"
                 if job and hasattr(job, 'exc_info') and job.exc_info:
