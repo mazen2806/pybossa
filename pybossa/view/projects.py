@@ -16,6 +16,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with PYBOSSA.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 import time
 import re
 import json
@@ -72,6 +73,8 @@ from pybossa.default_settings import TIMEOUT
 from pybossa.exporter.csv_reports_export import ProjectReportCsvExporter
 
 blueprint = Blueprint('project', __name__)
+logger = logging.getLogger(__name__)
+
 
 MAX_NUM_SYNCHRONOUS_TASKS_IMPORT = 200
 auditlogger = AuditLogger(auditlog_repo, caller='web')
@@ -859,7 +862,7 @@ def task_presenter(short_name, task_id):
 
     # add application log when user retrieve task
     if current_user.id and task_id:
-        current_app.logger.info(f"User {current_user.id} retrieve task {task_id}")
+        logger.info(f"User {current_user.id} retrieve task {task_id}")
 
     return respond('/projects/presenter.html')
 

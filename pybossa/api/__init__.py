@@ -30,6 +30,7 @@ This package adds GET, POST, PUT and DELETE methods for:
 
 """
 
+import logging
 import json
 import jwt
 from flask import Blueprint, request, abort, Response, make_response
@@ -64,6 +65,8 @@ from pybossa.auth import jwt_authorize_project
 from werkzeug.exceptions import MethodNotAllowed
 
 blueprint = Blueprint('api', __name__)
+logger = logging.getLogger(__name__)
+
 
 error = ErrorStatus()
 
@@ -138,7 +141,7 @@ def new_task(project_id):
                 response = make_response(json.dumps(data[0]))
                 # add application log when user retrieve task
                 if current_user.id and data[0]['id']:
-                    current_app.logger.info(f"User {current_user.id} retrieve task {data[0]['id']}")
+                    logger.info(f"User {current_user.id} retrieve task {data[0]['id']}")
             else:
                 response = make_response(json.dumps(data))
             response.mimetype = "application/json"

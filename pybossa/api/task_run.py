@@ -22,6 +22,7 @@ This package adds GET, POST, PUT and DELETE methods for:
     * task_runs
 
 """
+import logging
 import json
 import time, datetime
 from flask import request, Response, current_app
@@ -39,6 +40,9 @@ from pybossa.auth import ensure_authorized_to, is_authorized
 from pybossa.sched import can_post
 
 
+logger = logging.getLogger(__name__)
+
+
 class TaskRunAPI(APIBase):
 
     """Class API for domain object TaskRun."""
@@ -51,7 +55,7 @@ class TaskRunAPI(APIBase):
         response = super().post()
         try:
             data = response.get_json()
-            current_app.logger.info(f"User {current_user.id} submitted task_run {data['id']} for task {data['task_id']}")
+            logger.info(f"User {current_user.id} submitted task_run {data['id']} for task {data['task_id']}")
         finally:
             return response
 
