@@ -856,6 +856,11 @@ def task_presenter(short_name, task_id):
     if has_no_presenter(project):
         flash(gettext("Sorry, but this project is still a draft and does "
                       "not have a task presenter."), "error")
+
+    # add application log when user retrieve task
+    if current_user.id and task_id:
+        current_app.logger.info(f"User {current_user.id} retrieve task {task_id}")
+
     return respond('/projects/presenter.html')
 
 

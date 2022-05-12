@@ -136,6 +136,9 @@ def new_task(project_id):
                 response = make_response(json.dumps({}))
             elif len(data) == 1:
                 response = make_response(json.dumps(data[0]))
+                # add application log when user retrieve task
+                if current_user.id and data[0]['id']:
+                    current_app.logger.info(f"User {current_user.id} retrieve task {data[0]['id']}")
             else:
                 response = make_response(json.dumps(data))
             response.mimetype = "application/json"

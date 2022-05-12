@@ -46,6 +46,15 @@ class TaskRunAPI(APIBase):
     __class__ = TaskRun
     reserved_keys = set(['id', 'created', 'finish_time'])
 
+    #add application log when task_run is submitted
+    def post(self):
+        response = super().post()
+        try:
+            data = response.get_json()
+            current_app.logger.info(f"User {current_user.id} submitted task_run {data['id']} for task {data['task_id']}")
+        finally:
+            return response
+
     def check_can_post(self, project_id, task_id, user_ip_or_id):
         if not can_post(project_id, task_id, user_ip_or_id):
             raise Forbidden("You must request a task first!")
