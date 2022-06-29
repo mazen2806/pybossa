@@ -113,7 +113,8 @@ class TaskRunAPI(APIBase):
             guard._remove_task_stamped(task, get_user_id_or_ip())
         else:
             # hack to allow taskrun submit when guard expired
-            now = datetime.datetime.utcnow() - datetime.timedelta(minutes = 15)
+            # if task_run's execution time will be more than STAMP_TTL - created timestamp will be modified
+            now = datetime.datetime.utcnow() - datetime.timedelta(minutes=120)
             taskrun.created = now.isoformat()
 
     def _file_upload(self, data):
