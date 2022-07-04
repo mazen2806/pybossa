@@ -16,7 +16,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with PYBOSSA.  If not, see <http://www.gnu.org/licenses/>.
 
+import logging
 from pybossa.model import make_timestamp
+
+
+logger = logging.getLogger(__name__)
 
 
 class ContributionsGuard(object):
@@ -30,6 +34,7 @@ class ContributionsGuard(object):
     def stamp(self, task, user):
         key = self._create_key(task, user)
         self.conn.setex(key, self.STAMP_TTL, make_timestamp())
+        logger.info(f'Redis guard key "{key}" was created with TTL={self.STAMP_TTL} seconds')
 
     def check_task_stamped(self, task, user):
         key = self._create_key(task, user)
@@ -39,6 +44,10 @@ class ContributionsGuard(object):
     def retrieve_timestamp(self, task, user):
         key = self._create_key(task, user)
         timestamp = self.conn.get(key)
+        if timestamp:
+            logger.info(f'Redis guard key "{key}" exists')
+        else:
+            logger.info(f'Redis guard key "{key}" DO NOT exists')
         return timestamp and timestamp.decode()
 
     def _create_key(self, task, user):
@@ -49,4 +58,5 @@ class ContributionsGuard(object):
 
     def _remove_task_stamped(self, task, user):
         key = self._create_key(task, user)
+        logger.info(f'Redis guard key "{key}" was deleted')
         return self.conn.delete(key)
