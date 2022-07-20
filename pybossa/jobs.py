@@ -577,8 +577,9 @@ def webhook(url, payload=None, oid=None, rerun=False):
         webhook_repo.save(webhook)
     finally:
         if project.published and webhook.response_status_code != 200 and current_app.config.get('ADMINS'):
+            server_name = current_app.config.get('SERVER_NAME')
             subject = "Broken: %s webhook failed" % project.name
-            body = 'Sorry, but the webhook failed.\n\n' + 'webhook url = ' + str(url) + '\nresponse_status_code = ' + str(webhook.response_status_code) + '\nresponse:\n\n' + str(webhook.response) + '\n\npayload:\n\n' + str(payload)
+            body = 'Sorry, but the webhook failed for %s.\n\n' % server_name + 'webhook url = ' + str(url) + '\nresponse_status_code = ' + str(webhook.response_status_code) + '\nresponse:\n\n' + str(webhook.response) + '\n\npayload:\n\n' + str(payload)
             mail_dict = dict(recipients=current_app.config.get('ADMINS'), subject=subject, body=body)
             send_mail(mail_dict)
     if current_app.config.get('SSE'):
