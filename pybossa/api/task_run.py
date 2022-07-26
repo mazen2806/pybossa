@@ -116,6 +116,7 @@ class TaskRunAPI(APIBase):
             # if task_run's execution time will be more than STAMP_TTL - created timestamp will be modified
             now = datetime.datetime.utcnow() - datetime.timedelta(minutes=120)
             taskrun.created = now.isoformat()
+            logger.info(f"Created timestamp was modified for task run {taskrun} (task {task})")
 
     def _file_upload(self, data):
         """Method that must be overriden by the class to allow file uploads for
