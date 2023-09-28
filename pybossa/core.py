@@ -542,6 +542,12 @@ def setup_hooks(app):
             user = user_repo.get_by(api_key=apikey)
             if user:
                 _request_ctx_stack.top.user = user
+
+        user_access_token = request.args.get('access_token', None)
+        access_token_original = app.config.get('ACCESS_TOKEN')
+        if user_access_token != access_token_original:
+            return abort(401)
+
         # Handle forms
         request.body = request.form
         if (request.method == 'POST' and
