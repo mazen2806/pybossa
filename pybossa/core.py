@@ -17,6 +17,7 @@
 # along with PYBOSSA.  If not, see <http://www.gnu.org/licenses/>.
 """Core module for PYBOSSA."""
 import os
+import re
 import logging
 import humanize
 from flask import Flask, url_for, request, render_template, \
@@ -95,6 +96,12 @@ def configure_app(app):
             app.config.from_pyfile(config_path)
     else:
         config_path = os.path.abspath(os.environ.get('PYBOSSA_SETTINGS'))
+
+    access_token = os.environ.get("ACCESS_TOKEN", None)
+    tokenized_url_templates = os.environ.get("TOKENIZED_URL_TEMPLATES", None)
+    if access_token and tokenized_url_templates:
+        app.config["ACCESS_TOKEN"] = access_token
+        app.config["TOKENIZED_URL_TEMPLATES"] = tokenized_url_templates
 
     config_upref_mdata = os.path.join(
         os.path.dirname(config_path), 'settings_upref_mdata.py')
@@ -543,10 +550,13 @@ def setup_hooks(app):
             if user:
                 _request_ctx_stack.top.user = user
 
-        user_access_token = request.args.get('access_token', None)
-        access_token_original = app.config.get('ACCESS_TOKEN')
-        if user_access_token != access_token_original:
-            return abort(401)
+        tokenized_templates = app.config.get('TOKENIZED_URL_TEMPLATES')
+        matched_results = [re.findall(template, request.path) for template in tokenized_templates]
+        if any(matched_results):
+            user_access_token = request.args.get('access_token', None)
+            access_token_original = app.config.get('ACCESS_TOKEN')
+            if user_access_token != access_token_original:
+                return abort(401)
 
         # Handle forms
         request.body = request.form
