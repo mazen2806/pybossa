@@ -550,13 +550,7 @@ def setup_hooks(app):
             if user:
                 _request_ctx_stack.top.user = user
 
-        tokenized_templates = app.config.get('TOKENIZED_URL_TEMPLATES')
-        matched_results = [re.findall(template, request.path) for template in tokenized_templates]
-        if any(matched_results):
-            user_access_token = request.args.get('access_token', None)
-            access_token_original = app.config.get('ACCESS_TOKEN')
-            if user_access_token != access_token_original:
-                return abort(401)
+        _check_tokenized_templates()
 
         # Handle forms
         request.body = request.form
@@ -639,6 +633,15 @@ def setup_hooks(app):
         response = dict(template='400.html', code=400,
                         description=reason)
         return handle_content_type(response)
+
+    def _check_tokenized_templates():
+        tokenized_templates = app.config.get('TOKENIZED_URL_TEMPLATES')
+        matched_results = [re.findall(template, request.path) for template in tokenized_templates]
+        if any(matched_results):
+            user_access_token = request.args.get('access_token', None)
+            access_token_original = app.config.get('ACCESS_TOKEN')
+            if user_access_token != access_token_original:
+                return abort(401)
 
 
 def setup_jinja2_filters(app):
