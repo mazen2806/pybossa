@@ -168,6 +168,3 @@ SPAM = []
 USER_INACTIVE_NOTIFICATION = 5
 # Inactive users months to delete users
 USER_INACTIVE_DELETE = 6
-
-# mocked access token
-ACCESS_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
