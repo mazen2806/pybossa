@@ -135,13 +135,14 @@ def project_title(project, page_name):
 
 def project_by_shortname(short_name):
     project = project_repo.get_by(short_name=short_name)
-    if project:
-        # Get owner
-        ps = stats.get_stats(project.id, full=True)
-        owner = user_repo.get(project.owner_id)
-        return (project, owner, ps)
-    else:
-        return abort(404)
+    return project
+    # if project:
+    #     # Get owner
+    #     ps = stats.get_stats(project.id, full=True)
+    #     owner = user_repo.get(project.owner_id)
+    #     return (project, owner, ps)
+    # else:
+    #     return abort(404)
 
 
 def pro_features(owner=None):
