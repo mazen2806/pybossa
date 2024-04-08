@@ -1012,38 +1012,42 @@ def tasks_browse(short_name, page=1):
         page_tasks = cached_projects.browse_tasks(project.get('id'), per_page, offset)
         if not page_tasks and page != 1:
             abort(404)
+        else:
+            return page_tasks
 
-        pagination = Pagination(page, per_page, count)
 
-        project_sanitized, owner_sanitized = sanitize_project_owner(project,
-                                                                    owner,
-                                                                    current_user,
-                                                                    ps)
-
-        data = dict(template='/projects/tasks_browse.html',
-                    project=project_sanitized,
-                    owner=owner_sanitized,
-                    tasks=page_tasks,
-                    title=title,
-                    pagination=pagination,
-                    n_tasks=ps.n_tasks,
-                    overall_progress=ps.overall_progress,
-                    n_volunteers=ps.n_volunteers,
-                    n_completed_tasks=ps.n_completed_tasks,
-                    pro_features=pro)
-
-        return handle_content_type(data)
-
-    if project.needs_password():
-        redirect_to_password = _check_if_redirect_to_password(project)
-        if redirect_to_password:
-            return redirect_to_password
-    else:
-        ensure_authorized_to('read', project)
-
-    zip_enabled(project, current_user)
-
-    project = add_custom_contrib_button_to(project, get_user_id_or_ip())
+    #     pagination = Pagination(page, per_page, count)
+    #
+    #     # project_sanitized, owner_sanitized = sanitize_project_owner(project,
+    #     #                                                             owner,
+    #     #                                                             current_user,
+    #     #                                                             ps)
+    #
+    #     project_sanitized, owner_sanitized = project, owner
+    #     data = dict(template='/projects/tasks_browse.html',
+    #                 project=project_sanitized,
+    #                 owner=owner_sanitized,
+    #                 tasks=page_tasks,
+    #                 title=title,
+    #                 pagination=pagination,
+    #                 n_tasks=ps.n_tasks,
+    #                 overall_progress=ps.overall_progress,
+    #                 n_volunteers=ps.n_volunteers,
+    #                 n_completed_tasks=ps.n_completed_tasks,
+    #                 pro_features=pro)
+    #
+    #     return handle_content_type(data)
+    #
+    # if project.needs_password():
+    #     redirect_to_password = _check_if_redirect_to_password(project)
+    #     if redirect_to_password:
+    #         return redirect_to_password
+    # else:
+    #     ensure_authorized_to('read', project)
+    #
+    # zip_enabled(project, current_user)
+    #
+    # project = add_custom_contrib_button_to(project, get_user_id_or_ip())
     return respond()
 
 
