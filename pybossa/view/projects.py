@@ -1002,18 +1002,19 @@ def tasks(short_name):
 @blueprint.route('/<short_name>/tasks/browse/<int:page>')
 def tasks_browse(short_name, page=1):
     project, owner, ps = project_by_shortname(short_name)
-    title = project_title(project, "Tasks")
-    pro = pro_features()
-
-    def respond():
-        per_page = 10
-        offset = (page - 1) * per_page
-        count = ps.n_tasks
-        page_tasks = cached_projects.browse_tasks(project.get('id'), per_page, offset)
-        if not page_tasks and page != 1:
-            abort(404)
-        else:
-            return page_tasks
+    return project
+    # title = project_title(project, "Tasks")
+    # pro = pro_features()
+    #
+    # def respond():
+    #     per_page = 10
+    #     offset = (page - 1) * per_page
+    #     count = ps.n_tasks
+    #     page_tasks = cached_projects.browse_tasks(project.get('id'), per_page, offset)
+    #     if not page_tasks and page != 1:
+    #         abort(404)
+    #     else:
+    #         return page_tasks
 
 
     #     pagination = Pagination(page, per_page, count)
@@ -1048,7 +1049,7 @@ def tasks_browse(short_name, page=1):
     # zip_enabled(project, current_user)
     #
     # project = add_custom_contrib_button_to(project, get_user_id_or_ip())
-    return respond()
+    # return respond()
 
 
 @blueprint.route('/<short_name>/tasks/delete', methods=['GET', 'POST'])
