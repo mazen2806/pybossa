@@ -97,6 +97,7 @@ def configure_app(app):
     else:
         config_path = os.path.abspath(os.environ.get('PYBOSSA_SETTINGS'))
 
+    app.config['LDAP_HOST'] = os.environ.get("LDAP_HOST", None)
     access_token = os.environ.get("ACCESS_TOKEN", None)
     tokenized_url_templates = os.environ.get("TOKENIZED_URL_TEMPLATES", None)
     if access_token and tokenized_url_templates:
